@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">📦 Order History</h2>
+
+{% if orders %}
+    {% for order in orders %}
+    <div class="card mb-3 shadow">
+        <div class="card-header d-flex justify-content-between">
+            <span>Order #{{ order.id }} — {{ order.created_at|date:"d M Y" }}</span>
+            <span class="badge bg-danger">{{ order.status }}</span>
+        </div>
+        <div class="card-body">
+            <p><strong>Address:</strong> {{ order.address }}</p>
+            <p><strong>Payment:</strong> {{ order.payment_method }}</p>
+            <p><strong>Total:</strong> ${{ order.total }}</p>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No orders yet. <a href="{% url 'menu' %}">Order Now</a></p>
+{% endif %}
+{% endblock %}

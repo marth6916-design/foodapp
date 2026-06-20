@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">🍽️ Our Menu</h2>
+
+<form method="GET" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="search" class="form-control form-control-lg"
+               placeholder="🔍 Search food..." value="{{ search }}">
+        <button class="btn btn-danger" type="submit">Search</button>
+    </div>
+</form>
+
+<div class="mb-4">
+    {% for cat in categories %}
+    <a href="?category={{ cat }}" 
+       class="btn me-2 mb-2 {% if selected == cat %}btn-danger{% else %}btn-outline-danger{% endif %}">
+        {{ cat }}
+    </a>
+    {% endfor %}
+</div>
+<div class="row">
+    {% for food in foods %}
+    <div class="col-md-4 mb-4">
+        <div class="food-card card h-100">
+            <div class="card-body p-3">
+                <span class="badge bg-danger mb-2">{{ food.category }}</span>
+                {% if food.restaurant %}
+                <small class="text-muted d-block">
+                    <i class="fas fa-store me-1"></i>{{ food.restaurant.name }}
+                </small>
+                {% endif %}
+                <h6 class="fw-bold mt-1">{{ food.name }}</h6>
+                
+                <!-- Rating -->
+                <div class="text-warning small mb-2">
+                    {% if food.review_set.all %}
+                        {% for review in food.review_set.all %}
+                            {% if forloop.first %}
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}⭐{% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                        <small class="text-muted">({{ food.review_set.count }} reviews)</small>
+                    {% else %}
+                        <small class="text-muted">⭐ No reviews yet</small>
+                    {% endif %}
+                </div>
+
+                <p class="text-danger fw-bold">${{ food.price }}</p>
+                
+                <!-- Buttons -->
+                <a href="{% url 'food_detail' food.id %}"
+                   class="btn btn-outline-danger btn-sm rounded-pill w-100 mb-2">
+                    <i class="fas fa-eye me-1"></i>View Details
+                </a>
+                <a href="{% url 'add_to_cart' food.id %}"
+                   class="btn btn-danger btn-sm rounded-pill w-100">
+                    <i class="fas fa-cart-plus me-1"></i>Add to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

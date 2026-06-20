@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">⚙️ Manage Orders</h2>
+
+<table class="table table-bordered shadow">
+    <thead class="table-danger">
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Address</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Update</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.address }}</td>
+            <td>${{ order.total }}</td>
+            <td>{{ order.payment_method }}</td>
+            <td><span class="badge bg-danger">{{ order.status }}</span></td>
+            <td>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="Pending">Pending</option>
+                        <option value="Preparing">Preparing</option>
+                        <option value="On the Way">On the Way</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-danger mt-1">Update</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

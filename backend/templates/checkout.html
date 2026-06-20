@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <h2 class="mb-4">🧾 Checkout</h2>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label>Delivery Address</label>
+        <textarea name="address" class="form-control" rows="3" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label>Payment Method</label>
+        <select name="payment_method" class="form-control">
+          <option value="Cash on Delivery">Cash on Delivery</option>
+          <option value="QR Payment">QR Payment</option>
+        </select>
+        <div id="qr-section" style="display:none;" class="mt-3 text-center">
+    <p class="text-danger fw-bold">Scan to Pay:</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PAY-FOODAPP-ACCOUNT" 
+         width="200">
+</div>
+
+<script>
+document.querySelector('select[name="payment_method"]').addEventListener('change', function(){
+    var qr = document.getElementById('qr-section');
+    qr.style.display = this.value === 'QR Payment' ? 'block' : 'none';
+});
+</script>
+      </div>
+      <button type="submit" class="btn btn-danger w-100">Place Order</button>
+    </form>
+  </div>
+
+  <div class="col-md-4">
+    <h4>Order Summary</h4>
+    <ul class="list-group">
+      {% for item in cart_items %}
+      <li class="list-group-item d-flex justify-content-between">
+        {{ item.food.name }} x{{ item.quantity }}
+        <span>${{ item.total_price }}</span>
+      </li>
+      {% endfor %}
+      <li class="list-group-item d-flex justify-content-between fw-bold">
+        Total <span>${{ total }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

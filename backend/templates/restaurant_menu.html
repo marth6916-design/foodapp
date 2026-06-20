@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Restaurant Header -->
+<div class="p-4 mb-4 rounded text-white"
+     style="background: linear-gradient(135deg, #c0392b, #e74c3c);">
+    <h2>🏪 {{ restaurant.name }}</h2>
+    <p>{{ restaurant.description }}</p>
+    <p>📍 {{ restaurant.address }}</p>
+</div>
+
+<!-- Category Buttons -->
+<div class="mb-4">
+    {% for cat in categories %}
+    <a href="?category={{ cat }}"
+       class="btn me-2 mb-2 {% if selected == cat %}btn-danger{% else %}btn-outline-danger{% endif %}">
+        {{ cat }}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- Food Cards -->
+<div class="row">
+    {% for food in foods %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow border-0 h-100">
+            <img src="{{ food.image.url }}" class="card-img-top"
+                 style="height:200px; object-fit:cover;">
+            <div class="card-body">
+                <span class="badge bg-danger mb-2">{{ food.category }}</span>
+                <h5 class="card-title">{{ food.name }}</h5>
+                <p class="card-text text-muted">{{ food.description }}</p>
+                <p class="text-danger fw-bold">${{ food.price }}</p>
+                <a href="{% url 'add_to_cart' food.id %}"
+                   class="btn btn-danger w-100">Add to Cart</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No food items available in this category.</p>
+    {% endfor %}
+</div>
+{% endblock %}
